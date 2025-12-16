@@ -21,14 +21,56 @@ import android.util.Log;
  */
 public class PrivacyScreenPlugin extends CordovaPlugin {
 
+  private boolean privacyEnabled = false;
+
   @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
     Activity activity = cordova.getActivity();
 
     if (!isDebug(activity)) {
-      activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+      enablePrivacyScreen();
     }
+  }
+
+  @Override
+  public boolean execute(String action, org.json.JSONArray args, org.apache.cordova.CallbackContext callbackContext) throws org.json.JSONException {
+    if (action.equals("enable")) {
+      enablePrivacyScreen();
+      callbackContext.success();
+      return true;
+    } else if (action.equals("disable")) {
+      disablePrivacyScreen();
+      callbackContext.success();
+      return true;
+    }
+    return false;
+  }
+
+  private void enablePrivacyScreen() {
+    cordova.getActivity().runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        Activity activity = cordova.getActivity();
+        if (activity != null) {
+          activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+          privacyEnabled = true;
+        }
+      }
+    });
+  }
+
+  private void disablePrivacyScreen() {
+    cordova.getActivity().runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        Activity activity = cordova.getActivity();
+        if (activity != null) {
+          activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+          privacyEnabled = false;
+        }
+      }
+    });
   }
 
   private boolean isDebug(Activity activity) {
