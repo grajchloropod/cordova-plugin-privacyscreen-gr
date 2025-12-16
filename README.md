@@ -45,7 +45,7 @@ cordova plugin add cordova-plugin-privacyscreen
 ### From Git Repository
 
 ```bash
-https://github.com/grajchloropod/cordova-plugin-privacyscreen-gr
+cordova plugin add https://github.com/grajchloropod/cordova-plugin-privacyscreen-gr.git
 ```
 
 To remove the plugin:
